@@ -1,12 +1,14 @@
 #include "locoworker.h"
 
 LocoWorker::LocoWorker(const Locomotive &locomotive, const QList<int> &parcours,
-                       const QList<Troncon*>& map, const std::vector<std::pair<int, int>> switchesMap)
+                       const QList<Troncon*>& map, const std::vector<std::pair<int, int>> switchesMap,
+                       const bool highPriority)
 {
     _locomotive = locomotive;
     _parcours = parcours;
     _map = map;
     _switchesMap = switchesMap;
+    _highPriority = highPriority;
 }
 
 LocoWorker::~LocoWorker()
@@ -24,20 +26,11 @@ void LocoWorker::process() {
                 int contact1 = _parcours.at(i);
                 int contact2;
                 int contact3;
+                int contact4;
 
-                if (i == _parcours.size() - 1) {
-                    contact2 = _parcours.at(0);
-                } else {
-                    contact2 = _parcours.at(i + 1);
-                }
-
-                if (i == _parcours.size() - 2) {
-                    contact3 = _parcours.at(0);
-                } else if (i == _parcours.size() - 1) {
-                    contact3 = _parcours.at(1);
-                } else {
-                    contact3 = _parcours.at(i + 2);
-                }
+                contact2 = _parcours.at((i + 1) % _parcours.size());
+                contact3 = _parcours.at((i + 2) % _parcours.size());
+                contact4 = _parcours.at((i + 3) % _parcours.size());
 
                 for (int j = 0; j < _map.size(); j++) {
                     Troncon* troncon = _map.at(j);
@@ -51,6 +44,8 @@ void LocoWorker::process() {
                         troncon->lock(_locomotive, _switchesMap);
                     } else if (troncon->containsContact(contact2, contact3)) {
                         troncon->lock(_locomotive, _switchesMap);
+                    } else if (troncon->containsContact(contact3, contact4) && _highPriority) {
+                        troncon->lock(_locomotive, _switchesMap, false);
                     }
                 }
 

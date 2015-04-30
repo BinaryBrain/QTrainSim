@@ -16,7 +16,7 @@ QList<int> Troncon::contacts() const {
     return _contacts;
 }
 
-void Troncon::lock(Locomotive& loco, const std::vector<std::pair<int, int>>& switchesMap) {
+void Troncon::lock(Locomotive& loco, const std::vector<std::pair<int, int>>& switchesMap, const bool blocking) {
     _mutex.lock();
 
     if (!_isLockBy) {
@@ -31,12 +31,15 @@ void Troncon::lock(Locomotive& loco, const std::vector<std::pair<int, int>>& swi
                 }
             }
         }
+
     } else if(_isLockBy != loco.numero()) {
         afficher_message("Already locked by:");
         afficher_message(std::to_string(_isLockBy).c_str());
 
-        afficher_message("Stop");
-        loco.arreter();
+        if (blocking) {
+           loco.arreter();
+        }
+
         _waitingLocomotive = &loco;
         _waitingLocomotiveSwitches = switchesMap;
     }

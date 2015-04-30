@@ -17,10 +17,12 @@ private:
     QList<Troncon*> _map;
     Troncon* _currentTroncon = nullptr;
     std::vector<std::pair<int, int>> _switchesMap;
+    bool _highPriority;
 
 public:
     explicit LocoWorker(const Locomotive &locomotive, const QList<int> &parcours,
-                        const QList<Troncon *> &map, const std::vector<std::pair<int, int>>);
+                        const QList<Troncon *> &map, const std::vector<std::pair<int, int>>,
+                        const bool highPriority);
     ~LocoWorker();
 
 signals:

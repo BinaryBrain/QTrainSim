@@ -48,8 +48,10 @@ int cmain()
     //Initialisation d'un parcours
     QList<int> parcours1;
     QList<int> parcours2;
-    parcours1 << 25 << 1 << 19 << 20 << 8 << 7 << 13 << 26;
-    parcours2 << 23 << 22 << 3 << 4 << 9 << 10 << 15 << 18;
+    // parcours1 << 25 << 1 << 19 << 20 << 8 << 7 << 13 << 26;
+    // parcours2 << 23 << 22 << 3 << 4 << 9 << 10 << 15 << 18;
+    parcours1 << 26 << 25 << 1 << 19 << 20 << 8 << 7 << 13;
+    parcours2 << 18 << 23 << 22 << 3 << 4 << 9 << 10 << 15;
 
     // Structure de données pour les aiguillages 1
     std::vector<std::pair<int, int>> switchesMap1;
@@ -81,7 +83,8 @@ int cmain()
     //Initialisation de la locomotive 1
     locomotive1.fixerNumero(1);
     locomotive1.fixerVitesse(5);
-    locomotive1.fixerPosition(25, 26);
+    // locomotive1.fixerPosition(25, 26);
+    locomotive1.fixerPosition(26, 13);
     diriger_aiguillage(17, TOUT_DROIT, 0);
     locomotive1.allumerPhares();
     locomotive1.demarrer();
@@ -90,15 +93,15 @@ int cmain()
     //Initialisation de la locomotive 2
     locomotive2.fixerNumero(2);
     locomotive2.fixerVitesse(7);
-    // locomotive2.fixerPosition(13, 14);
-    locomotive2.fixerPosition(23, 18);
+    // locomotive2.fixerPosition(23, 18);
+    locomotive2.fixerPosition(18, 15);
     locomotive2.allumerPhares();
     locomotive2.demarrer();
     locomotive2.afficherMessage("Loco2: Ready!");
 
     // Création du thread de gestion de la loco 1
     QThread* thread1 = new QThread;
-    LocoWorker* worker1 = new LocoWorker(locomotive1, parcours1, map, switchesMap1);
+    LocoWorker* worker1 = new LocoWorker(locomotive1, parcours1, map, switchesMap1, true);
     worker1->moveToThread(thread1);
     QObject::connect(thread1, SIGNAL(started()), worker1, SLOT(process()));
     QObject::connect(worker1, SIGNAL(finished()), thread1, SLOT(quit()));
@@ -108,7 +111,7 @@ int cmain()
 
     // Création du thread de gestion de la loco 2
     QThread* thread2 = new QThread;
-    LocoWorker* worker2 = new LocoWorker(locomotive2, parcours2, map, switchesMap2);
+    LocoWorker* worker2 = new LocoWorker(locomotive2, parcours2, map, switchesMap2, false);
     worker2->moveToThread(thread2);
     QObject::connect(thread2, SIGNAL(started()), worker2, SLOT(process()));
     QObject::connect(worker2, SIGNAL(finished()), thread2, SLOT(quit()));

@@ -26,7 +26,7 @@ public:
 
     QList<int> contacts() const;
 
-    void lock(Locomotive& loco, const std::vector<std::pair<int, int>>& switchesMap);
+    void lock(Locomotive& loco, const std::vector<std::pair<int, int>>& switchesMap, const bool blocking=true);
     void unlock();
 
     bool containsContact(const int contact) const;
