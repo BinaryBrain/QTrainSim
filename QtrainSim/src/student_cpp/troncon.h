@@ -6,6 +6,7 @@
 
 #include <QList>
 #include <QString>
+#include <QMutex>
 
 class Troncon
 {
@@ -15,6 +16,7 @@ private:
     QList<int> _switches;
     Locomotive* _waitingLocomotive = nullptr;
     std::vector<std::pair<int, int>> _waitingLocomotiveSwitches;
+    QMutex _mutex;
 
     Troncon(const Troncon&);
 

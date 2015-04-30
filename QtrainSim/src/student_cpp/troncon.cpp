@@ -17,12 +17,12 @@ QList<int> Troncon::contacts() const {
 }
 
 void Troncon::lock(Locomotive& loco, const std::vector<std::pair<int, int>>& switchesMap) {
-    afficher_message("try lock");
-    //afficher_message(std::to_string(_contacts.at(0)).c_str());
-    //afficher_message(std::to_string(_contacts.at(1)).c_str());
+    _mutex.lock();
+
     if (!_isLockBy) {
-        afficher_message("lock");
         _isLockBy = loco.numero();
+        afficher_message("free, locking for:");
+        afficher_message(std::to_string(_isLockBy).c_str());
 
         for (unsigned int i = 0; i < switchesMap.size(); i++) {
             for (int j = 0; j < _switches.size(); j++) {
@@ -32,20 +32,22 @@ void Troncon::lock(Locomotive& loco, const std::vector<std::pair<int, int>>& swi
             }
         }
     } else if(_isLockBy != loco.numero()) {
-        afficher_message("already lock");
-        // suspendre la tâche en attente dans la file associée à v
-        afficher_message("stop");
+        afficher_message("Already locked by:");
+        afficher_message(std::to_string(_isLockBy).c_str());
+
+        afficher_message("Stop");
         loco.arreter();
         _waitingLocomotive = &loco;
         _waitingLocomotiveSwitches = switchesMap;
     }
+
+    _mutex.unlock();
 }
 
 void Troncon::unlock() {
-    afficher_message("try unlock");
-    if (_waitingLocomotive) {
-        afficher_message("run locked loco");
+    _mutex.lock();
 
+    if (_waitingLocomotive) {
         for (unsigned int i = 0; i < _waitingLocomotiveSwitches.size(); i++) {
             for (int j = 0; j < _switches.size(); j++) {
                 if (_waitingLocomotiveSwitches.at(i).first == _switches.at(j)) {
@@ -61,6 +63,8 @@ void Troncon::unlock() {
     } else {
         _isLockBy = 0;
     }
+
+    _mutex.unlock();
 }
 
 bool Troncon::containsContact(const int contact) const {

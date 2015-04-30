@@ -80,7 +80,7 @@ int cmain()
 
     //Initialisation de la locomotive 1
     locomotive1.fixerNumero(1);
-    locomotive1.fixerVitesse(10);
+    locomotive1.fixerVitesse(5);
     locomotive1.fixerPosition(25, 26);
     diriger_aiguillage(17, TOUT_DROIT, 0);
     locomotive1.allumerPhares();
@@ -89,7 +89,7 @@ int cmain()
 
     //Initialisation de la locomotive 2
     locomotive2.fixerNumero(2);
-    locomotive2.fixerVitesse(20);
+    locomotive2.fixerVitesse(7);
     // locomotive2.fixerPosition(13, 14);
     locomotive2.fixerPosition(23, 18);
     locomotive2.allumerPhares();
