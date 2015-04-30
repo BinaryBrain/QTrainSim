@@ -3,6 +3,7 @@
 
 #include "locomotive.h"
 #include "ctrain_handler.h"
+#include "troncon.h"
 
 #include <QObject>
 
@@ -13,9 +14,13 @@ class LocoWorker : public QObject
 private:
     Locomotive _locomotive;
     QList<int> _parcours;
+    QList<Troncon*> _map;
+    Troncon* _currentTroncon = nullptr;
+    std::vector<std::pair<int, int>> _switchesMap;
 
 public:
-    explicit LocoWorker(Locomotive &locomotive, QList<int> &parcours);
+    explicit LocoWorker(const Locomotive &locomotive, const QList<int> &parcours,
+                        const QList<Troncon *> &map, const std::vector<std::pair<int, int>>);
     ~LocoWorker();
 
 signals:
